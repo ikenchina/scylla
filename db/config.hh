@@ -725,6 +725,7 @@ public:
     val(experimental, bool, false, Used, "Set to true to unlock experimental features.") \
     val(lsa_reclamation_step, size_t, 1, Used, "Minimum number of segments to reclaim in a single step") \
     val(prometheus_port, uint16_t, 9180, Used, "Prometheus port, set to zero to disable") \
+    val(prometheus_metric_path, sstring, "/metrics", Used, "Prometheus metrics path, http resource path from where to fetch metrics") \
     val(prometheus_address, sstring, "0.0.0.0", Used, "Prometheus listening address") \
     val(prometheus_prefix, sstring, "scylla", Used, "Set the prefix of the exported Prometheus metrics. Changing this will break Scylla's dashboard compatibility, do not change unless you know what you are doing.") \
     val(abort_on_lsa_bad_alloc, bool, false, Used, "Abort when allocation in LSA region fails") \

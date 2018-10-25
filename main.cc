@@ -409,6 +409,8 @@ int main(int ac, char** av) {
             if (pport) {
                 pctx.metric_help = "Scylla server statistics";
                 pctx.prefix = cfg->prometheus_prefix();
+                pctx.metric_path = cfg->prometheus_metric_path();
+
                 prometheus_server.start("prometheus").get();
                 engine().at_exit([&prometheus_server] {
                     return prometheus_server.stop();
