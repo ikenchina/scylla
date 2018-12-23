@@ -1,0 +1,56 @@
+From b54d5b6553a4877ab1e4b43c7a89fdfaa67d36df Mon Sep 17 00:00:00 2001
+From: ikenchina <ikenchina@gmail.com>
+Date: Sat, 22 Dec 2018 22:13:52 +0800
+Subject: [PATCH] configuration : prometheus metric path By default, Scylla set
+ prometheus metric path to "/metrics"
+
+Signed-off-by: ikenchina <ikenchina@gmail.com>
+---
+ conf/scylla.yaml | 7 +++++++
+ db/config.hh     | 1 +
+ main.cc          | 2 ++
+ 3 files changed, 10 insertions(+)
+
+diff --git a/conf/scylla.yaml b/conf/scylla.yaml
+index 9f2680a..61fecc8 100644
+--- a/conf/scylla.yaml
++++ b/conf/scylla.yaml
+@@ -801,3 +801,10 @@ commitlog_total_space_in_mb: -1
+ #
+ # Keep at 12 for new clusters.
+ murmur3_partitioner_ignore_msb_bits: 12
++
++#
++# prometheus metric path
++# By default, Scylla set prometheus metric path to "/metrics"
++# prometheus_metric_path: /metrics
++
++
+diff --git a/db/config.hh b/db/config.hh
+index a970765..aa04a47 100644
+--- a/db/config.hh
++++ b/db/config.hh
+@@ -728,6 +728,7 @@ class config : public utils::config_file {
+     val(experimental, bool, false, Used, "Set to true to unlock experimental features.") \
+     val(lsa_reclamation_step, size_t, 1, Used, "Minimum number of segments to reclaim in a single step") \
+     val(prometheus_port, uint16_t, 9180, Used, "Prometheus port, set to zero to disable") \
++    val(prometheus_metric_path, sstring, "/metrics", Used, "Prometheus metrics path, http resource path from where to fetch metrics") \
+     val(prometheus_address, sstring, "0.0.0.0", Used, "Prometheus listening address") \
+     val(prometheus_prefix, sstring, "scylla", Used, "Set the prefix of the exported Prometheus metrics. Changing this will break Scylla's dashboard compatibility, do not change unless you know what you are doing.") \
+     val(abort_on_lsa_bad_alloc, bool, false, Used, "Abort when allocation in LSA region fails") \
+diff --git a/main.cc b/main.cc
+index dd9798f..174f80c 100644
+--- a/main.cc
++++ b/main.cc
+@@ -416,6 +416,8 @@ int main(int ac, char** av) {
+             if (pport) {
+                 pctx.metric_help = "Scylla server statistics";
+                 pctx.prefix = cfg->prometheus_prefix();
++                pctx.metric_path = cfg->prometheus_metric_path();
++
+                 prometheus_server.start("prometheus").get();
+                 engine().at_exit([&prometheus_server] {
+                     return prometheus_server.stop();
+-- 
+2.7.4
+

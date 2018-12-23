@@ -801,3 +801,10 @@ commitlog_total_space_in_mb: -1
 #
 # Keep at 12 for new clusters.
 murmur3_partitioner_ignore_msb_bits: 12
+
+#
+# prometheus metric path
+# By default, Scylla set prometheus metric path to "/metrics"
+# prometheus_metric_path: /metrics
+
+
